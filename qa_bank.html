@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>QA Bank (IDs Dinâmicos)</title>
+    
+    <style>
+        :root {
+            --primary-color: #004d99;
+            --secondary-color: #007bff;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --text-dark: #343a3f;
+            --background-light: #f4f7f9;
+            --card-background: #ffffff;
+            --border-radius: 8px;
+            --box-shadow-soft: 0 6px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-light);
+            padding: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        /* --- Layout de Autenticação --- */
+        .auth-container {
+            width: 100%;
+            max-width: 400px;
+        }
+
+        /* --- Layout da App Logada (Web App) --- */
+        .app-container {
+            width: 100%;
+            max-width: 900px;
+            /* Largura de "Web App" */
+            display: flex;
+            gap: 30px;
+        }
+
+        .app-sidebar {
+            width: 220px;
+            background-color: var(--card-background);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow-soft);
+            padding: 20px;
+            height: fit-content;
+        }
+
+        .app-main-content {
+            flex: 1;
+            /* Ocupa o espaço restante */
+        }
+
+        /* --- Fim do Layout da App --- */
+
+        .card {
+            background-color: var(--card-background);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow-soft);
+            margin-bottom: 25px;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2rem;
+            width: 100%;
+            max-width: 900px;
+        }
+
+        h2 {
+            color: var(--text-dark);
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e9ecef;
+            font-weight: 600;
+        }
+
+        h3 {
+            color: var(--text-dark);
+            font-size: 1.2rem;
+            margin-top: 15px;
+            margin-bottom: 10px;
+        }
+
+        /* --- Navegação da Sidebar --- */
+        .nav-link {
+            display: block;
+            padding: 12px 15px;
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 600;
+            font-size: 1rem;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            transition: background-color 0.2s;
+        }
+
+        .nav-link:hover {
+            background-color: #f1f1f1;
+        }
+
+        .nav-link.active {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .sidebar-footer {
+            border-top: 1px solid #e9ecef;
+            padding-top: 15px;
+            margin-top: 15px;
+        }
+
+        /* --- Fim da Navegação --- */
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: var(--text-dark);
+            font-size: 0.95rem;
+        }
+
+        input[type="email"],
+        input[type="password"],
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ced4da;
+            border-radius: var(--border-radius);
+            box-sizing: border-box;
+            font-size: 1rem;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        
+        /* Classe genérica de formulário (ARMADILHA) */
+        .form-control {
+             border-left: 3px solid #ced4da;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+            outline: none;
+        }
+
+        input.invalid,
+        select.invalid {
+            border-color: var(--danger-color);
+            box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+        }
+
+        .form-input-valor {
+            border-left: 4px solid var(--danger-color);
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: background-color 0.3s, opacity 0.3s;
+            margin-right: 10px;
+        }
+
+        .btn:disabled {
+            background-color: #ced4da;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .btn-primary {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .btn-success {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn:hover:not(:disabled) {
+            opacity: 0.9;
+        }
+
+        .btn-block {
+            width: 100%;
+            margin-right: 0;
+            margin-bottom: 10px;
+        }
+
+        .message {
+            padding: 12px;
+            margin-top: 15px;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .inline-error {
+            color: var(--danger-color);
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-top: 3px;
+            height: 1.2em;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            color: var(--danger-color);
+            border: 1px solid var(--danger-color);
+        }
+
+        .success {
+            background-color: #d4edda;
+            color: var(--success-color);
+            border: 1px solid var(--success-color);
+        }
+
+        .balance-box {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            margin-bottom: 25px;
+            font-size: 1.1em;
+        }
+
+        .balance-box strong {
+            display: block;
+            font-size: 1.6rem;
+            margin-top: 5px;
+        }
+
+        .balance-box small {
+            opacity: 0.8;
+            font-size: 0.9em;
+        }
+    </style>
+    <script>
+        function generateRandomId(prefix) {
+            return prefix + '_' + Math.random().toString(36).substring(2, 9);
+        }
+        (function scrambleIds() {
+            const idsToScramble = [
+                'email-input', 'password-input', 'btn-login', 'login-message',
+                'register-name-input', 'register-email-input', 'register-password-input',
+                'register-sexo-select', 'btn-register-submit', 'register-message',
+                'user-name-display', 'account-number-display', 'balance-total-value',
+                'saque-valor-input', 'saque-message', 'transfer-destino-input', 
+                'transfer-valor-input', 'transfer-message', 'deposito-valor-input', 'deposito-message'
+            ];
+            
+            document.addEventListener('DOMContentLoaded', () => {
+                console.warn('*** SIMULAÇÃO: Randomizando IDs para a aula de automação... ***');
+                idsToScramble.forEach(staticId => {
+                    const el = document.getElementById(staticId);
+                    if (el) {
+                        const prefix = staticId.split('-')[0];
+                        const newId = generateRandomId(prefix);
+                        el.id = newId; 
+                    }
+                });
+                console.warn('*** IDs randomizados. Use [data-cy] ou [name]! ***');
+            });
+        })();
+    </script>
+    
+    <script type="module">
+      /**
+       * Web LLM AI Assistant for Test Automation
+       * @module LocalAI
+       * @version 1.0.0
+       */
+      
+      // ============================================
+      // CONFIGURATION
+      // ============================================
+      const CONFIG = {
+        // Library configuration
+        library: {
+          url: 'https://cdn.jsdelivr.net/npm/@mlc-ai/web-llm@0.2.80/+esm',
+          version: '0.2.80',
+          fallbackUrls: [
+            'https://unpkg.com/@mlc-ai/web-llm@0.2.80/+esm',
+            'https://esm.sh/@mlc-ai/web-llm@0.2.80'
+          ]
+        },
+        
+        // Model configuration
+        model: {
+          path: 'TinyLlama-1.1B-Chat-v1.0-q4f16_1-MLC',
+          device: 'webgpu',
+          fallbackDevice: 'wasm'
+        },
+        
+        // Performance settings
+        performance: {
+          maxTokens: 80,
+          temperature: 0,
+          timeout: 30000, // 30 seconds
+          cacheResponses: true,
+          maxCacheSize: 100
+        },
+        
+        // UI feedback
+        ui: {
+          showLoadingIndicator: true,
+          showProgress: true,
+          logToConsole: true
+        }
+      };
+
+      // ============================================
+      // STATE MANAGEMENT
+      // ============================================
+      const state = {
+        engine: null,
+        isLoading: false,
+        isReady: false,
+        error: null,
+        loadProgress: 0,
+        responseCache: new Map(),
+        initAttempts: 0,
+        maxInitAttempts: 3
+      };
+
+      // ============================================
+      // UTILITY FUNCTIONS
+      // ============================================
+      
+      /**
+       * Logger utility with different levels
+       */
+      const logger = {
+        info: (msg, ...args) => CONFIG.ui.logToConsole && console.log(`[LocalAI] ${msg}`, ...args),
+        warn: (msg, ...args) => CONFIG.ui.logToConsole && console.warn(`[LocalAI] ${msg}`, ...args),
+        error: (msg, ...args) => console.error(`[LocalAI] ${msg}`, ...args),
+        debug: (msg, ...args) => CONFIG.ui.logToConsole && console.debug(`[LocalAI] ${msg}`, ...args)
+      };
+
+      /**
+       * Check if WebGPU is supported
+       */
+      async function checkWebGPUSupport() {
+        if (!navigator.gpu) {
+          logger.warn('WebGPU not supported, will fallback to WASM');
+          return false;
+        }
+        
+        try {
+          const adapter = await navigator.gpu.requestAdapter();
+          if (!adapter) {
+            logger.warn('WebGPU adapter not available');
+            return false;
+          }
+          return true;
+        } catch (error) {
+          logger.error('WebGPU check failed:', error);
+          return false;
+        }
+      }
+
+      /**
+       * Dynamic import with fallback URLs
+       */
+      async function importLibrary() {
+        const urls = [CONFIG.library.url, ...CONFIG.library.fallbackUrls];
+        
+        for (const url of urls) {
+          try {
+            logger.info(`Attempting to load from: ${url}`);
+            const module = await import(url);
+            logger.info('Library loaded successfully');
+            return module;
+          } catch (error) {
+            logger.warn(`Failed to load from ${url}:`, error.message);
+          }
+        }
+        
+        throw new Error('Failed to load Web LLM library from all sources');
+      }
+
+      /**
+       * Create cache key from description and HTML
+       */
+      function getCacheKey(description, html) {
+        const content = `${description}|${html}`;
+        // Simple hash function
+        let hash = 0;
+        for (let i = 0; i < content.length; i++) {
+          const char = content.charCodeAt(i);
+          hash = ((hash << 5) - hash) + char;
+          hash = hash & hash; // Convert to 32-bit integer
+        }
+        return hash.toString(36);
+      }
+
+      /**
+       * Manage response cache
+       */
+      const cacheManager = {
+        get(key) {
+          if (!CONFIG.performance.cacheResponses) return null;
+          return state.responseCache.get(key);
+        },
+        
+        set(key, value) {
+          if (!CONFIG.performance.cacheResponses) return;
+          
+          // Implement LRU cache
+          if (state.responseCache.size >= CONFIG.performance.maxCacheSize) {
+            const firstKey = state.responseCache.keys().next().value;
+            state.responseCache.delete(firstKey);
+          }
+          
+          state.responseCache.set(key, {
+            value,
+            timestamp: Date.now()
+          });
+        },
+        
+        clear() {
+          state.responseCache.clear();
+          logger.info('Cache cleared');
+        }
+      };
+
+      // ============================================
+      // PROGRESS TRACKING
+      // ============================================
+      
+      /**
+       * Show loading progress (can be customized)
+       */
+      function updateProgress(progress, message) {
+        state.loadProgress = progress;
+        
+        if (CONFIG.ui.showProgress) {
+          logger.info(`Progress: ${Math.round(progress * 100)}% - ${message}`);
+          
+          // Dispatch custom event for UI integration
+          window.dispatchEvent(new CustomEvent('localai:progress', {
+            detail: { progress, message }
+          }));
+        }
+      }
+
+      // ============================================
+      // ENGINE INITIALIZATION
+      // ============================================
+      
+      /**
+       * Initialize the ML engine with error handling and retries
+       */
+      async function initializeEngine() {
+        if (state.engine) {
+          logger.debug('Engine already initialized');
+          return state.engine;
+        }
+        
+        if (state.isLoading) {
+          logger.debug('Engine initialization in progress, waiting...');
+          // Wait for current initialization to complete
+          return new Promise((resolve, reject) => {
+            const checkInterval = setInterval(() => {
+              if (state.isReady && state.engine) {
+                clearInterval(checkInterval);
+                resolve(state.engine);
+              } else if (state.error) {
+                clearInterval(checkInterval);
+                reject(state.error);
+              }
+            }, 100);
+          });
+        }
+        
+        state.isLoading = true;
+        state.error = null;
+        state.initAttempts++;
+        
+        try {
+          updateProgress(0.1, 'Checking browser compatibility...');
+          
+          // Check WebGPU support
+          const hasWebGPU = await checkWebGPUSupport();
+          const device = hasWebGPU ? CONFIG.model.device : CONFIG.model.fallbackDevice;
+          
+          updateProgress(0.2, 'Loading Web LLM library...');
+          
+          // Import library with fallback
+          const { CreateWebWorkerMLCEngine } = await importLibrary();
+          
+          updateProgress(0.4, `Initializing engine with ${device}...`);
+          
+          // Create engine with timeout
+          const enginePromise = CreateWebWorkerMLCEngine(CONFIG.model.path, {
+            device,
+            progressCallback: (report) => {
+              const progress = 0.4 + (report.progress || 0) * 0.5;
+              updateProgress(progress, report.text || 'Loading model...');
+            }
+          });
+          
+          // Add timeout
+          const timeoutPromise = new Promise((_, reject) => {
+            setTimeout(() => reject(new Error('Engine initialization timeout')),
+                       CONFIG.performance.timeout);
+          });
+          
+          state.engine = await Promise.race([enginePromise, timeoutPromise]);
+          
+          updateProgress(1.0, 'Engine ready!');
+          state.isReady = true;
+          state.isLoading = false;
+          state.initAttempts = 0;
+          
+          logger.info('✓ Local AI engine initialized successfully');
+          
+          // Dispatch ready event
+          window.dispatchEvent(new CustomEvent('localai:ready'));
+          
+          return state.engine;
+          
+        } catch (error) {
+          state.isLoading = false;
+          state.error = error;
+          
+          logger.error('Engine initialization failed:', error);
+          
+          // Retry logic
+          if (state.initAttempts < state.maxInitAttempts) {
+            logger.warn(`Retrying initialization (attempt ${state.initAttempts + 1}/${state.maxInitAttempts})...`);
+            await new Promise(resolve => setTimeout(resolve, 2000)); // Wait 2s before retry
+            return initializeEngine();
+          }
+          
+          // Dispatch error event
+          window.dispatchEvent(new CustomEvent('localai:error', {
+            detail: { error }
+          }));
+          
+          throw new Error(`Failed to initialize Local AI after ${state.maxInitAttempts} attempts: ${error.message}`);
+        }
+      }
+
+      // ============================================
+      // MAIN API
+      // ============================================
+      
+      /**
+       * Main function to get CSS selector from AI
+       * @param {string} description - Description of the element to find
+       * @param {string} html - HTML context to search in
+       * @returns {Promise<string>} CSS selector
+       */
+      async function localAI(description, html) {
+        // Input validation
+        if (!description || typeof description !== 'string') {
+          throw new Error('Description must be a non-empty string');
+        }
+        
+        if (!html || typeof html !== 'string') {
+          throw new Error('HTML must be a non-empty string');
+        }
+        
+        // Check cache
+        const cacheKey = getCacheKey(description, html);
+        const cached = cacheManager.get(cacheKey);
+        
+        if (cached) {
+          logger.debug('Returning cached result');
+          return cached.value;
+        }
+        
+        try {
+          // Initialize engine if needed
+          const engine = await initializeEngine();
+          
+          // Prepare prompt
+          const prompt = `
+Você é um assistente de testes de software.
+Retorne APENAS UM seletor CSS que identifica:
+"${description}"
+
+HTML:
+${html}
+
+Retorne apenas o seletor, nada mais.`.trim();
+          
+          logger.debug('Sending prompt to AI...');
+          
+          // Create completion with timeout
+          const completionPromise = engine.chat.completions.create({
+            messages: [{ role: 'user', content: prompt }],
+            temperature: CONFIG.performance.temperature,
+            max_tokens: CONFIG.performance.maxTokens,
+          });
+          
+          const timeoutPromise = new Promise((_, reject) => {
+            setTimeout(() => reject(new Error('AI response timeout')),
+                       CONFIG.performance.timeout);
+          });
+          
+          const response = await Promise.race([completionPromise, timeoutPromise]);
+          
+          // Extract and validate result
+          const selector = response?.choices?.[0]?.message?.content?.trim?.() ?? '';
+          
+          if (!selector) {
+            throw new Error('AI returned empty selector');
+          }
+          
+          logger.debug('AI returned selector:', selector);
+          
+          // Cache result
+          cacheManager.set(cacheKey, selector);
+          
+          return selector;
+          
+        } catch (error) {
+          logger.error('localAI failed:', error);
+          
+          // Return fallback or throw
+          if (error.message.includes('timeout')) {
+            throw new Error('AI request timed out. Please try again.');
+          }
+          
+          throw new Error(`AI selector generation failed: ${error.message}`);
+        }
+      }
+
+      // ============================================
+      // PUBLIC API
+      // ============================================
+      
+      /**
+       * Expose API to window with additional utilities
+       */
+      window.localAI = Object.assign(localAI, {
+        // Utility methods
+        isReady: () => state.isReady,
+        isLoading: () => state.isLoading,
+        getError: () => state.error,
+        getProgress: () => state.loadProgress,
+        
+        // Cache management
+        clearCache: () => cacheManager.clear(),
+        getCacheSize: () => state.responseCache.size,
+        
+        // Manual initialization
+        initialize: initializeEngine,
+        
+        // Configuration
+        getConfig: () => ({ ...CONFIG }),
+        updateConfig: (updates) => {
+          Object.assign(CONFIG, updates);
+          logger.info('Configuration updated');
+        },
+        
+        // Cleanup
+        destroy: async () => {
+          if (state.engine) {
+            try {
+              // Cleanup engine resources if API provides it
+              state.engine = null;
+              state.isReady = false;
+              cacheManager.clear();
+              logger.info('Engine destroyed');
+            } catch (error) {
+              logger.error('Error destroying engine:', error);
+            }
+          }
+        }
+      });
+
+      // ============================================
+      // AUTO-INITIALIZATION (Optional)
+      // ============================================
+      
+      /**
+       * Optionally pre-load the engine on page load
+       * Comment out if you want lazy loading only
+       */
+      if (CONFIG.ui.showLoadingIndicator) {
+        // Wait for DOM to be ready
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', () => {
+            logger.info('Page loaded, AI engine available on demand');
+            // Uncomment to pre-initialize:
+            // initializeEngine().catch(err => logger.error('Pre-init failed:', err));
+          });
+        }
+      }
+
+      logger.info('Local AI module loaded. Use window.localAI() to interact.');
+      
+    </script>
+</head>
+<body>
+    
+    <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
+        <h1>QA Bank</h1>
+        
+        <div id="auth-container" class="auth-container">
+            <div id="login-card" data-cy="login-card">
+                 <div class="card">
+                    <h2>Acesso à Conta</h2>
+                    <div class="form-group">
+                        <label for="email-input">Email:</label>
+                        <input type="email" id="email-input" class="form-control" data-cy="input-login-email" name="email" placeholder="seu.email@qa.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="password-input">Senha:</label>
+                        <input type="password" id="password-input" class="form-control" data-cy="input-login-password" name="password" placeholder="********">
+                    </div>
+                    <button class="btn btn-primary btn-block" onclick="login()" data-cy="btn-login" id="btn-login" name="submit_button" disabled>Entrar</button>
+                    <button class="btn btn-success btn-block" onclick="showRegister(true)" data-cy="btn-toggle-register" name="toggle_register">Quero Criar uma Conta</button>
+                    <p id="login-message" class="message" role="alert" style="display: none;" data-cy="login-message"></p>
+                </div>
+            </div>
+            <div id="register-card" data-cy="register-card" style="display: none;">
+                 <div class="card">
+                    <h2>Criar Nova Conta</h2>
+                    <div class="form-group">
+                        <label for="register-name-input">Nome Completo:</label>
+                        <input type="text" id="register-name-input" class="form-control" data-cy="input-register-name" name="full_name" placeholder="Seu nome">
+                        <small class="inline-error" data-cy="error-message-name"></small>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-email-input">Email:</label>
+                        <input type="email" id="register-email-input" class="form-control" data-cy="input-register-email" name="new_email" placeholder="email@unico.com">
+                        <small class="inline-error" data-cy="error-message-email"></small>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-password-input">Senha:</label>
+                        <input type="password" id="register-password-input" class="form-control" data-cy="input-register-password" name="new_password" placeholder="Mínimo 6 caracteres">
+                        <small class="inline-error" data-cy="error-message-password"></small>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-sexo-select">Sexo:</label>
+                        <select id="register-sexo-select" class="form-control" data-cy="select-register-sexo" name="sex">
+                            <option value="">Selecione</option>
+                            <option value="MASCULINO">Masculino</option>
+                            <option value="FEMININO">Feminino</option>
+                            <option value="OUTRO">Outro / Prefiro não dizer</option>
+                        </select>
+                        <small class="inline-error" data-cy="error-message-sexo"></small>
+                    </div>
+                    <button class="btn btn-success btn-block" onclick="register()" data-cy="btn-register-submit" id="btn-register-submit" name="create_user_button" disabled>Salvar Cadastro</button>
+                    <button class="btn btn-block" onclick="showRegister(false)" data-cy="btn-toggle-login">Voltar para Login</button>
+                    <p id="register-message" class="message" role="alert" style="display: none;" data-cy="register-message"></p>
+                </div>
+            </div>
+        </div>
+
+        <div id="app" class="app-container" data-cy="painel-operacoes" style="display: none;">
+            
+            <div class="app-sidebar">
+                <nav>
+                    <a href="#" id="nav-home" class="nav-link" onclick="showView('home-view')" data-cy="nav-home">🏠 Home</a>
+                    <a href="#" id="nav-deposito" class="nav-link" onclick="showView('deposito-view')" data-cy="nav-deposito">💰 Depósito</a>
+                    <a href="#" id="nav-saque" class="nav-link" onclick="showView('saque-view')" data-cy="nav-saque">💸 Saque</a>
+                    <a href="#" id="nav-transfer" class="nav-link" onclick="showView('transfer-view')" data-cy="nav-transferencia">🔄 Transferência</a>
+                </nav>
+                <div class="sidebar-footer">
+                    <button class="btn btn-block" data-cy="btn-logout" name="logout" onclick="logout()">Sair</button>
+                </div>
+            </div>
+
+            <div class="app-main-content">
+                
+                <div class="balance-box">
+                    Olá, 
+                    <span 
+                      id="user-name-display" 
+                      class="user-profile-name greeting" 
+                      name="user_name_text" 
+                      data-cy="user-name-display"
+                    ></span>
+                    
+                    <small>Conta: 
+                      <span 
+                        id="account-number-display" 
+                        class="account-detail" 
+                        name="account_number" 
+                        data-cy="account-number-display"
+                      ></span>
+                    </small>
+                    
+                    <p>Saldo em Conta:</p>
+                    
+                    <strong 
+                      id="balance-total-value" 
+                      class="balance-highlight" 
+                      name="balance_total" 
+                      data-cy="saldo-atual"
+                    >
+                      R$ <span id="account-balance">0,00</span>
+                    </strong>
+                </div>
+
+                <div id="home-view" class="view-container" data-cy="home-view" style="display: none;">
+                    <div class="card">
+                        <h2>Bem-vindo ao seu Painel</h2>
+                        <p>Selecione uma das operações ao lado para começar.</p>
+                    </div>
+                </div>
+                
+                <div id="saque-view" class="view-container" data-cy="saque-view" style="display: none;">
+                    <div class="card">
+                        <h2>Saque Imediato</h2>
+                        <div class="form-group">
+                            <label for="saque-valor-input">Valor:</label>
+                            <input type="number" id="saque-valor-input" class="form-input-valor" data-cy="input-saque-valor" placeholder="R$ Ex: 500.00">
+                        </div>
+                        <button class="btn btn-danger btn-block" data-cy="btn-sacar" onclick="saque()">
+                            Realizar Saque
+                        </button>
+                        <p id="saque-message" class="message" role="alert" style="display: none;" data-cy="saque-message"></p>
+                    </div>
+                </div>
+                
+                <div id="transfer-view" class="view-container" data-cy="transfer-view" style="display: none;">
+                    <div class="card">
+                        <h2>Transferência entre Contas</h2>
+                        <div class="form-group">
+                            <label for="transfer-destino-input">Número da Conta de Destino:</label>
+                            <input type="number" id="transfer-destino-input" data-cy="input-transfer-destino" placeholder="Ex: 987654">
+                        </div>
+                        <div class="form-group">
+                            <label for="transfer-valor-input">Valor a Transferir:</label>
+                            <input type="number" id="transfer-valor-input" class="form-input-valor" data-cy="input-transfer-valor" placeholder="R$ Ex: 100.00">
+                        </div>
+                        <button class="btn btn-primary btn-block" data-cy="btn-transferir" onclick="transfer()">
+                            Transferir
+                        </button>
+                        <p id="transfer-message" class="message" role="alert" style="display: none;" data-cy="transfer-message"></p>
+                    </div>
+                </div>
+
+                <div id="deposito-view" class="view-container" data-cy="deposito-view" style="display: none;">
+                    <div class="card">
+                        <h2>Depósito em Conta</h2>
+                        <div class="form-group">
+                            <label for="deposito-valor-input">Valor:</label>
+                            <input type="number" id="deposito-valor-input" class="form-input-valor" data-cy="input-deposito-valor" placeholder="R$ Ex: 100.00" style="border-left-color: var(--success-color);">
+                        </div>
+                        <button class="btn btn-success btn-block" data-cy="btn-depositar" onclick="deposito()">
+                            Realizar Depósito
+                        </button>
+                        <p id="deposito-message" class="message" role="alert" style="display: none;" data-cy="deposito-message"></p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Constantes de LocalStorage ---
+        const LOCAL_STORAGE_USERS = 'bancoTesteUsers';
+        const LOCAL_STORAGE_BALANCE = 'bancoTesteBalance';
+
+        // --- "Seed" (Semeadura) do Usuário Admin ---
+        (function seedAdminUser() {
+            const adminEmail = 'admin@qabank.com';
+            const users = JSON.parse(localStorage.getItem(LOCAL_STORAGE_USERS) || '{}');
+            
+            if (!users[adminEmail]) {
+                const adminUser = {
+                    password: "admin123", 
+                    name: "Admin do Sistema",
+                    sexo: "OUTRO",
+                    accountNumber: "000001",
+                    createdAt: new Date()
+                };
+                users[adminEmail] = adminUser;
+                localStorage.setItem(LOCAL_STORAGE_USERS, JSON.stringify(users));
+                
+                const balances = JSON.parse(localStorage.getItem(LOCAL_STORAGE_BALANCE) || '{}');
+                balances[adminUser.accountNumber] = 999999.00;
+                localStorage.setItem(LOCAL_STORAGE_BALANCE, JSON.stringify(balances));
+                
+                console.log('*** USUÁRIO ADMIN [admin@qabank.com / admin123] CRIADO COM SUCESSO ***');
+            } else {
+                if (users[adminEmail].password !== "admin123") {
+                    users[adminEmail].password = "admin123";
+                    localStorage.setItem(LOCAL_STORAGE_USERS, JSON.stringify(users));
+                    console.log('*** SENHA DO ADMIN ATUALIZADA PARA 6 DÍGITOS (admin123) ***');
+                }
+            }
+        })();
+
+        // --- Funções de Gerenciamento do LocalStorage (Encapsuladas) ---
+        (function() { 
+            function getUsers() {
+                const users = localStorage.getItem(LOCAL_STORAGE_USERS);
+                return users ? JSON.parse(users) : {};
+            }
+            function saveUsers(users) {
+                localStorage.setItem(LOCAL_STORAGE_USERS, JSON.stringify(users));
+            }
+            function getAllBalances() {
+                 const balances = localStorage.getItem(LOCAL_STORAGE_BALANCE);
+                return balances ? JSON.parse(balances) : {};
+            }
+            function getBalance(accountNumber) {
+                const data = getAllBalances();
+                return data[accountNumber] !== undefined ? data[accountNumber] : 0.00;
+            }
+            function setBalance(accountNumber, newBalance) {
+                const data = getAllBalances();
+                data[accountNumber] = parseFloat(newBalance.toFixed(2));
+                localStorage.setItem(LOCAL_STORAGE_BALANCE, JSON.stringify(data));
+            }
+            window.getUsers = getUsers;
+            window.saveUsers = saveUsers;
+            window.getAllBalances = getAllBalances;
+            window.getBalance = getBalance;
+            window.setBalance = setBalance;
+            window.generateAccountNumber = () => Math.floor(100000 + Math.random() * 900000).toString();
+        })();
+
+        // --- Funções de Validação de Formulário (Encapsuladas) ---
+        (function() {
+            
+            const getEl = (cySelector) => document.querySelector(`[data-cy="${cySelector}"]`);
+            const getErrorEl = (cySelector) => document.querySelector(`[data-cy="error-message-${cySelector.split('-').pop()}"]`);
+
+            function validateLoginFields() {
+                const email = getEl('input-login-email').value;
+                const password = getEl('input-login-password').value;
+                const loginButton = getEl('btn-login');
+                loginButton.disabled = !(email.trim().length > 0 && password.trim().length > 0);
+            }
+            function checkRegisterButtonState() {
+                const name = getEl('input-register-name').value;
+                const email = getEl('input-register-email').value;
+                const password = getEl('input-register-password').value;
+                const sexo = getEl('select-register-sexo').value;
+                const registerButton = getEl('btn-register-submit');
+                registerButton.disabled = !(name.trim().length > 0 && email.trim().length > 0 && password.trim().length > 0 && sexo !== "");
+            }
+            function validateField(field, errorEl, check) {
+                const isValid = check(field.value);
+                if (field.value.trim().length > 0 && !isValid) {
+                    errorEl.textContent = field.dataset.errorMessage || 'Campo inválido.';
+                    field.classList.add('invalid');
+                } else {
+                    errorEl.textContent = '';
+                    field.classList.remove('invalid');
+                }
+                return isValid || field.value.trim().length === 0;
+            }
+            
+            window.validateLoginFields = validateLoginFields;
+            window.checkRegisterButtonState = checkRegisterButtonState;
+            window.validateNameOnBlur = () => validateField(
+                getEl('input-register-name'),
+                getErrorEl('input-register-name'),
+                (value) => value.trim().length > 0
+            );
+            window.validateEmailOnBlur = () => {
+                const el = getEl('input-register-email');
+                el.dataset.errorMessage = "Formato de email inválido.";
+                return validateField(
+                    el,
+                    getErrorEl('input-register-email'),
+                    (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+                );
+            };
+            window.validatePasswordOnBlur = () => {
+                const el = getEl('input-register-password');
+                el.dataset.errorMessage = "A senha deve ter no mínimo 6 caracteres.";
+                return validateField(
+                    el,
+                    getErrorEl('input-register-password'),
+                    (value) => value.trim().length >= 6
+                );
+            };
+            window.validateSexoOnBlur = () => {
+                const el = getEl('select-register-sexo');
+                el.dataset.errorMessage = "Por favor, selecione o sexo.";
+                return validateField(
+                    el,
+                    getErrorEl('select-register-sexo'),
+                    (value) => value !== ""
+                );
+            };
+        })();
+
+        // --- Funções de Estado da Interface (UI) ---
+        
+        function showView(viewId) {
+            document.querySelectorAll('.view-container').forEach(view => {
+                view.style.display = 'none';
+            });
+            
+            document.querySelectorAll('.message').forEach(msg => {
+                msg.style.display = 'none';
+                msg.textContent = '';
+            });
+
+            const view = document.getElementById(viewId);
+            if (view) {
+                view.style.display = 'block';
+            }
+            
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            const activeLink = document.getElementById(`nav-${viewId.split('-')[0]}`);
+            if (activeLink) {
+                activeLink.classList.add('active');
+            }
+        }
+
+        function showRegister(show) {
+            const loginCard = document.querySelector('[data-cy="login-card"]');
+            const registerCard = document.querySelector('[data-cy="register-card"]');
+            
+            if (show) {
+                loginCard.style.display = 'none';
+                registerCard.style.display = 'block';
+                document.querySelector('[data-cy="register-message"]').style.display = 'none';
+                
+                const fields = ['input-register-name', 'input-register-email', 'input-register-password'];
+                fields.forEach(cyId => {
+                    document.querySelector(`[data-cy="${cyId}"]`).value = '';
+                    document.querySelector(`[data-cy="${cyId}"]`).classList.remove('invalid');
+                });
+                document.querySelector('[data-cy="select-register-sexo"]').value = '';
+                document.querySelector('[data-cy="select-register-sexo"]').classList.remove('invalid');
+                
+                const errors = ['error-message-name', 'error-message-email', 'error-message-password', 'error-message-sexo'];
+                errors.forEach(cyId => {
+                    const errorEl = document.querySelector(`[data-cy="${cyId}"]`);
+                    if(errorEl) errorEl.textContent = '';
+                });
+                
+                checkRegisterButtonState();
+
+            } else {
+                loginCard.style.display = 'block';
+                registerCard.style.display = 'none';
+                document.querySelector('[data-cy="login-message"]').style.display = 'none';
+                
+                document.querySelector('[data-cy="input-login-email"]').value = '';
+                document.querySelector('[data-cy="input-login-password"]').value = '';
+                
+                validateLoginFields();
+            }
+        }
+
+        function updateUI() {
+            const token = localStorage.getItem('authToken');
+            const userAccount = localStorage.getItem('authUserAccountNumber');
+            
+            const authContainer = document.getElementById('auth-container');
+            const appSection = document.getElementById('app');
+            
+            const balanceSpan = document.getElementById('account-balance');
+            const nameSpan = document.querySelector('[data-cy="user-name-display"]');
+            const accountSpan = document.querySelector('[data-cy="account-number-display"]');
+
+            if (token && userAccount) {
+                authContainer.style.display = 'none';
+                appSection.style.display = 'flex';
+                
+                const users = getUsers();
+                const currentUser = Object.values(users).find(user => user.accountNumber === userAccount);
+                
+                if (currentUser) {
+                    nameSpan.textContent = currentUser.name;
+                    accountSpan.textContent = userAccount;
+                    balanceSpan.textContent = getBalance(userAccount).toLocaleString('pt-BR', { minimumFractionDigits: 2 }); 
+                } else {
+                    logout();
+                    return;
+                }
+                
+                // *** CORREÇÃO DO BUG "TypeError" ***
+                // As linhas abaixo foram comentadas pois os IDs são randomizados
+                // document.getElementById('saque-valor-input').value = '';
+                // document.getElementById('transfer-destino-input').value = '';
+                // document.getElementById('transfer-valor-input').value = '';
+                // document.getElementById('deposito-valor-input').value = '';
+
+                showView('home-view');
+
+            } else {
+                authContainer.style.display = 'block';
+                appSection.style.display = 'none';
+                
+                document.querySelector('[data-cy="input-login-email"]').value = '';
+                document.querySelector('[data-cy="input-login-password"]').value = '';
+
+                showRegister(false); 
+            }
+        }
+
+        // --- Ações da Aplicação (Event Handlers) ---
+        (function() {
+            
+            const getEl = (cySelector) => document.querySelector(`[data-cy="${cySelector}"]`);
+            
+            function register() {
+                const msgEl = getEl('register-message');
+                msgEl.style.display = 'none';
+                if (!validateNameOnBlur() || !validateEmailOnBlur() || !validatePasswordOnBlur() || !validateSexoOnBlur()) return;
+                
+                const name = getEl('input-register-name').value;
+                const email = getEl('input-register-email').value;
+                const password = getEl('input-register-password').value;
+                const sexo = getEl('select-register-sexo').value;
+                msgEl.className = 'message error';
+
+                const users = getUsers();
+                if (users[email]) {
+                    msgEl.style.display = 'block';
+                    msgEl.textContent = 'Email já cadastrado.';
+                    return;
+                }
+                let accountNumber;
+                let existingAccounts = Object.values(users).map(u => u.accountNumber);
+                do { accountNumber = generateAccountNumber(); } while (existingAccounts.includes(accountNumber));
+
+                users[email] = { password, name, sexo, accountNumber, createdAt: new Date() };
+                saveUsers(users);
+                setBalance(accountNumber, 1000.00); 
+
+                setTimeout(()=> {
+                    msgEl.className = 'message success';
+                    msgEl.style.display = 'block';
+                    msgEl.textContent = `Conta criada com sucesso! Seu Número de Conta é: ${accountNumber}. Volte para o Login.`;
+                },5000)
+                
+                getEl('input-register-name').value = '';
+                getEl('input-register-email').value = '';
+                getEl('input-register-password').value = '';
+                getEl('select-register-sexo').value = '';
+                checkRegisterButtonState(); 
+            }
+            function login() {
+                const email = getEl('input-login-email').value;
+                const password = getEl('input-login-password').value;
+                const msgEl = getEl('login-message');
+                msgEl.className = 'message error';
+                msgEl.style.display = 'block';
+                const users = getUsers();
+                if (users[email] && users[email].password === password) {
+                    const user = users[email];
+                    localStorage.setItem('authToken', `token_${Math.random().toString(36).substring(2, 15)}`);
+                    localStorage.setItem('authUserEmail', email);
+                    localStorage.setItem('authUserAccountNumber', user.accountNumber); 
+                    msgEl.className = 'message success';
+                    msgEl.textContent = 'Acesso liberado...';
+                    setTimeout(updateUI, 500); 
+                } else {
+                    msgEl.textContent = 'Email ou senha inválidos.';
+                }
+            }
+            function logout() {
+                localStorage.removeItem('authToken');
+                localStorage.removeItem('authUserEmail');
+                localStorage.removeItem('authUserAccountNumber');
+                updateUI();
+            }
+            function saque() {
+                const userAccount = localStorage.getItem('authUserAccountNumber');
+                const valor = parseFloat(document.querySelector('[data-cy="input-saque-valor"]').value);
+                const msgEl = document.querySelector('[data-cy="saque-message"]');
+                msgEl.className = 'message error';
+                msgEl.style.display = 'block';
+                if (!userAccount) { msgEl.textContent = 'Erro de sessão. Faça login novamente.'; return; }
+                if (isNaN(valor) || valor <= 0) { msgEl.textContent = 'Valor inválido. Insira um valor positivo.'; return; }
+                let currentBalance = getBalance(userAccount);
+                if (currentBalance >= valor) {
+                    currentBalance -= valor;
+                    setBalance(userAccount, currentBalance);
+                    msgEl.className = 'message success';
+                    msgEl.textContent = `Saque de R$ ${valor.toFixed(2).replace('.', ',')} realizado com sucesso.`;
+                    
+                    // --- CORREÇÃO (NÃO VOLTA MAIS PARA HOME) ---
+                    document.getElementById('account-balance').textContent = getBalance(userAccount).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+                    
+                    document.querySelector('[data-cy="input-saque-valor"]').value = '';
+                } else {
+                    msgEl.textContent = 'Saldo insuficiente para esta operação.';
+                }
+            }
+            function transfer() {
+                const origemAccount = localStorage.getItem('authUserAccountNumber');
+                const destinoAccount = document.querySelector('[data-cy="input-transfer-destino"]').value;
+                const valor = parseFloat(document.querySelector('[data-cy="input-transfer-valor"]').value);
+                const msgEl = document.querySelector('[data-cy="transfer-message"]');
+                msgEl.className = 'message error';
+                msgEl.style.display = 'block';
+                if (isNaN(valor) || valor <= 0 || destinoAccount === '') { msgEl.textContent = 'Verifique valor e número da Conta de Destino.'; return; }
+                if (origemAccount === destinoAccount) { msgEl.textContent = 'Transferência para a própria conta não é permitida.'; return; }
+                const users = getUsers();
+                const accountExists = Object.values(users).some(user => user.accountNumber === destinoAccount);
+                if (!accountExists) { msgEl.textContent = `Conta de destino (${destinoAccount}) não encontrada no sistema.`; return; }
+                let currentBalance = getBalance(origemAccount);
+                if (currentBalance >= valor) {
+                    currentBalance -= valor;
+                    setBalance(origemAccount, currentBalance);
+                    let destinoBalance = getBalance(destinoAccount);
+                    destinoBalance += valor;
+                    setBalance(destinoAccount, destinoBalance);
+                    msgEl.className = 'message success';
+                    msgEl.textContent = `Transferência de R$ ${valor.toFixed(2).replace('.', ',')} para a conta ${destinoAccount} concluída.`;
+                    
+                    // --- CORREÇÃO (NÃO VOLTA MAIS PARA HOME) ---
+                    document.getElementById('account-balance').textContent = getBalance(origemAccount).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+                    
+                    document.querySelector('[data-cy="input-transfer-destino"]').value = '';
+                    document.querySelector('[data-cy="input-transfer-valor"]').value = '';
+                } else {
+                    msgEl.textContent = 'Saldo insuficiente para realizar a transferência.';
+                }
+            }
+            window.register = register;
+            window.login = login;
+            window.logout = logout;
+            window.saque = saque;
+            window.transfer = transfer;
+        })();
+        
+        function deposito() {
+            const userAccount = localStorage.getItem('authUserAccountNumber');
+            const valor = parseFloat(document.querySelector('[data-cy="input-deposito-valor"]').value);
+            const msgEl = document.querySelector('[data-cy="deposito-message"]');
+            msgEl.className = 'message error';
+            msgEl.style.display = 'block';
+
+            if (!userAccount) {
+                 msgEl.textContent = 'Erro de sessão. Faça login novamente.';
+                return;
+            }
+            
+            if (isNaN(valor) || valor <= 0) {
+                msgEl.textContent = 'Valor inválido. Insira um valor positivo.';
+                return;
+            }
+
+            let currentBalance = getBalance(userAccount);
+            currentBalance += valor;
+            setBalance(userAccount, currentBalance);
+
+            msgEl.className = 'message success';
+            msgEl.textContent = `Depósito de R$ ${valor.toFixed(2).replace('.', ',')} realizado com sucesso.`;
+            
+            // --- CORREÇÃO (NÃO VOLTA MAIS PARA HOME) ---
+            document.getElementById('account-balance').textContent = getBalance(userAccount).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+            
+            document.querySelector('[data-cy="input-deposito-valor"]').value = '';
+        }
+        
+        // --- Inicialização da Aplicação ---
+        
+        function initValidationListeners() {
+            
+            document.querySelector('[data-cy="input-login-email"]').addEventListener('input', window.validateLoginFields);
+            document.querySelector('[data-cy="input-login-password"]').addEventListener('input', window.validateLoginFields);
+            
+            document.querySelector('[data-cy="input-register-name"]').addEventListener('input', window.checkRegisterButtonState);
+            document.querySelector('[data-cy="input-register-email"]').addEventListener('input', window.checkRegisterButtonState);
+            document.querySelector('[data-cy="input-register-password"]').addEventListener('input', window.checkRegisterButtonState);
+            document.querySelector('[data-cy="select-register-sexo"]').addEventListener('change', window.checkRegisterButtonState);
+            
+            document.querySelector('[data-cy="input-register-name"]').addEventListener('blur', window.validateNameOnBlur);
+            document.querySelector('[data-cy="input-register-email"]').addEventListener('blur', window.validateEmailOnBlur);
+            document.querySelector('[data-cy="input-register-password"]').addEventListener('blur', window.validatePasswordOnBlur);
+            document.querySelector('[data-cy="select-register-sexo"]').addEventListener('blur', window.validateSexoOnBlur);
+        }
+
+        window.onload = () => {
+            initValidationListeners();
+            updateUI(); 
+        };
+    </script>
+</body>
+</html>
